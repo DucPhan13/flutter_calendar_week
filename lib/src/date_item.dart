@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_week/src/cache_stream_widget.dart';
-import 'package:flutter_calendar_week/src/utils/compare_date.dart';
 import 'package:flutter_calendar_week/src/utils/cache_stream.dart';
+import 'package:flutter_calendar_week/src/utils/utils.dart';
 
 class DateItem extends StatefulWidget {
   /// Today
@@ -81,11 +81,17 @@ class __DateItemState extends State<DateItem> {
             /// Set default style each [builder] is called
             _defaultTextStyle = widget.dateStyle;
 
-            /// Check and set [Background] of today
-            if (compareDate(widget.date, widget.today)) {
-              _defaultBackgroundColor = widget.todayBackgroundColor;
-            } else if (!data.hasError && data.hasData) {
+
+            /// Check and set [Background] of selected
+            if (!data.hasError && data.hasData) {
               final DateTime? dateSelected = data.data;
+              ///Check and set [Background] of today if it is also selected
+              if(compareDate(dateSelected, widget.today)) {
+                _defaultBackgroundColor = Colors.red;
+                _defaultTextStyle = widget.pressedDateStyle;
+              } else {
+                _defaultBackgroundColor = widget.todayBackgroundColor;
+              }
               if (compareDate(widget.date, dateSelected)) {
                 _defaultBackgroundColor = widget.pressedBackgroundColor;
                 _defaultTextStyle = widget.pressedDateStyle;

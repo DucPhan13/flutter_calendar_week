@@ -7,12 +7,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_week/flutter_calendar_week.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_calendar_week/src/utils/compare_date.dart';
-import 'package:flutter_calendar_week/src/utils/separate_weeks.dart';
-import 'package:flutter_calendar_week/src/utils/find_current_week_index.dart';
-import 'package:flutter_calendar_week/src/strings.dart';
 import 'package:flutter_calendar_week/src/models/week_item.dart';
+import 'package:flutter_calendar_week/src/strings.dart';
+import 'package:flutter_calendar_week/src/utils/utils.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   CalendarWeekController? controller;
@@ -23,39 +21,32 @@ void main() {
   group('CalendarWeek test', () {
     test('compareDate is working correctly', () {
       expect(compareDate(DateTime.now(), DateTime.now()), true);
-      expect(compareDate(DateTime.now(), DateTime.now().add(Duration(days: 1))),
-          false);
+      expect(compareDate(DateTime.now(), DateTime.now().add(Duration(days: 1))), false);
     });
 
     test('separateWeeks and compareDate is working correctly', () {
-      final List<WeekItem> separated = separateWeeks(DateTime(2020, 1, 1),
-          DateTime(2020, 1, 15), dayOfWeekDefault, monthDefaults);
+      final List<WeekItem> separated =
+          separateWeeks(DateTime(2020, 1, 1), DateTime(2020, 1, 15), dayOfWeekDefault, monthDefaults);
       expect(separated.length, 3);
       for (int i = 0; i < separated.length; i++) {
         for (int j = 0; j < separated[i].days.length - 1; j++) {
           if (separated[i].days[j] == null) {
             break;
           }
-          if (j + i < separated[i].days.length &&
-              separated[i].days[j + 1] != null) {
-            expect(
-                separated[i].days[j]!.isBefore(separated[i].days[j + 1]!), true);
+          if (j + i < separated[i].days.length && separated[i].days[j + 1] != null) {
+            expect(separated[i].days[j]!.isBefore(separated[i].days[j + 1]!), true);
           }
         }
       }
 
-      int currentWeekIndex =
-          findCurrentWeekIndexByDate(DateTime(2020, 1, 15), separated);
+      int currentWeekIndex = findCurrentWeekIndexByDate(DateTime(2020, 1, 15), separated);
       expect(currentWeekIndex, separated.length - 1);
-      currentWeekIndex =
-          findCurrentWeekIndexByDate(DateTime(2020, 1, 1), separated);
+      currentWeekIndex = findCurrentWeekIndexByDate(DateTime(2020, 1, 1), separated);
       expect(currentWeekIndex, 0);
-      currentWeekIndex =
-          findCurrentWeekIndexByDate(DateTime(2020, 1, 9), separated);
+      currentWeekIndex = findCurrentWeekIndexByDate(DateTime(2020, 1, 9), separated);
       expect(currentWeekIndex, 1);
     });
-    testWidgets('CalendarWeek widget is working correctly',
-        (WidgetTester tester) async {
+    testWidgets('CalendarWeek widget is working correctly', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
         home: Material(
           child: CalendarWeek(
@@ -73,10 +64,7 @@ void main() {
       int diff = controller!.selectedDate.difference(selectDateA).inDays;
       expect(diff, 0);
       expect(controller!.rangeWeekDate[0]!.isBefore(selectDateA), true);
-      expect(
-          controller!.rangeWeekDate[controller!.rangeWeekDate.length - 1]!
-              .isAfter(selectDateA),
-          true);
+      expect(controller!.rangeWeekDate[controller!.rangeWeekDate.length - 1]!.isAfter(selectDateA), true);
 
       /// Test select is more than [maxDate], keep [selectedDate]
       final DateTime selectDateB = DateTime.now().add(Duration(days: 1000));

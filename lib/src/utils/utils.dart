@@ -1,10 +1,44 @@
 import 'package:flutter_calendar_week/src/models/week_item.dart';
 import 'package:flutter_calendar_week/src/strings.dart';
 
+/// Compare dates, return a bool value. [True] is same date or [false] else
+bool compareDate(DateTime? dateA, DateTime? dateB) {
+  if (dateA?.day == dateB?.day && dateA?.month == dateB?.month && dateA?.year == dateB?.year) {
+    return true;
+  }
+  return false;
+}
+
+/// [findCurrentWeekIndexByDate] return -1 when cannot match
+int findCurrentWeekIndexByDate(DateTime dateTime, List<WeekItem> weeks) {
+  int index = -1;
+  bool matched = false;
+  for (int i = 0; i < weeks.length; i++) {
+    index++;
+    for (int j = 0; j < weeks[i].days.length; j++) {
+      if (compareDate(dateTime, weeks[i].days[j])) {
+        matched = true;
+        break;
+      }
+    }
+    if (matched) {
+      break;
+    }
+  }
+
+  return matched ? index : -1;
+}
+
+/// [firstDayOfWeek] return firstWeekday of the same week as provided date
+firstDayOfWeek(DateTime date) {
+  var day = DateTime.utc(date.year, date.month, date.day, 12);
+  day = day.subtract(Duration(days: day.weekday - 1));
+  return day;
+}
+
 /// Read from [minDate] to [maxDate] and separate weeks.
 /// Return [List] contain weeks;
-List<WeekItem> separateWeeks(DateTime minDate, DateTime maxDate,
-    List<String> dayOfWeek, List<String> _months) {
+List<WeekItem> separateWeeks(DateTime minDate, DateTime maxDate, List<String> dayOfWeek, List<String> _months) {
   /// Count until length day of week
   int count = 1;
 
@@ -18,15 +52,7 @@ List<WeekItem> separateWeeks(DateTime minDate, DateTime maxDate,
   final List<WeekItem> _weeks = [];
 
   /// Clone [minDate] object
-  DateTime minDateCloned = DateTime(
-      minDate.year,
-      minDate.month,
-      minDate.day,
-      minDate.hour,
-      minDate.minute,
-      minDate.second,
-      minDate.millisecond,
-      minDate.microsecond);
+  DateTime minDateCloned = firstDayOfWeek(minDate);
 
   /// Read from [minDate] to [maxDate]
   while (minDateCloned.compareTo(maxDate) < 1) {
@@ -53,10 +79,8 @@ List<WeekItem> separateWeeks(DateTime minDate, DateTime maxDate,
       _days.add(minDateCloned);
 
       /// Add the week to list week
-      _weeks.add(WeekItem(
-          month: _months[minDateCloned.month - 1],
-          dayOfWeek: List.from(_dayOfWeek),
-          days: List.from(_days)));
+      _weeks.add(
+          WeekItem(month: _months[minDateCloned.month - 1], dayOfWeek: List.from(_dayOfWeek), days: List.from(_days)));
 
       /// Clear list before add new item
       _dayOfWeek.clear();
@@ -69,17 +93,13 @@ List<WeekItem> separateWeeks(DateTime minDate, DateTime maxDate,
 
   /// If [while] about is not end with last day of week, add items less
   if (count > 1) {
-    _weeks.add(WeekItem(
-        month: _months[_days[0].month - 1],
-        dayOfWeek: List.from(_dayOfWeek),
-        days: List.from(_days)));
+    _weeks.add(WeekItem(month: _months[_days[0].month - 1], dayOfWeek: List.from(_dayOfWeek), days: List.from(_days)));
     _dayOfWeek.clear();
     _days.clear();
   }
 
   /// Fit day to list week
-  if (_weeks.isNotEmpty &&
-      _weeks[_weeks.length - 1].dayOfWeek.length < maxDayOfWeek) {
+  if (_weeks.isNotEmpty && _weeks[_weeks.length - 1].dayOfWeek.length < maxDayOfWeek) {
     for (int i = 0; i < maxDayOfWeek; i++) {
       if (i > _weeks[_weeks.length - 1].dayOfWeek.length - 1) {
         _weeks[_weeks.length - 1].dayOfWeek.add(dayOfWeek[i]);
