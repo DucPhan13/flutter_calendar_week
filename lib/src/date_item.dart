@@ -25,6 +25,9 @@ class DateItem extends StatefulWidget {
   /// Specify a background after pressed
   final Color? pressedBackgroundColor;
 
+  /// Specify a background if after pressed is [today]
+  final Color? pressedTodayBackgroundColor;
+
   /// Alignment a decoration
   final Alignment? decorationAlignment;
 
@@ -52,6 +55,7 @@ class DateItem extends StatefulWidget {
     this.backgroundColor = Colors.transparent,
     this.todayBackgroundColor = Colors.orangeAccent,
     this.pressedBackgroundColor,
+    this.pressedTodayBackgroundColor = Colors.red,
     this.decorationAlignment = FractionalOffset.center,
     this.dayShapeBorder,
     this.onDatePressed,
@@ -88,7 +92,7 @@ class __DateItemState extends State<DateItem> {
               ///Check and set [Background] of today if it is also selected
               if (compareDate(widget.date, widget.today)) {
                 if (compareDate(widget.date, dateSelected)) {
-                  _defaultBackgroundColor = Colors.red;
+                  _defaultBackgroundColor = widget.pressedTodayBackgroundColor;
                   _defaultTextStyle = widget.pressedDateStyle;
                 } else {
                   _defaultBackgroundColor = widget.todayBackgroundColor;

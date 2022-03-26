@@ -130,6 +130,9 @@ class CalendarWeek extends StatefulWidget {
   /// Specify background for date after pressed
   final Color datePressedBackgroundColor;
 
+  /// Specify background for today after pressed
+  final Color todayPressedBackgroundColor;
+
   /// Specify a style for date after pressed
   final TextStyle datePressedStyle;
 
@@ -189,6 +192,7 @@ class CalendarWeek extends StatefulWidget {
       this.dateStyle,
       this.todayDateStyle,
       this.todayBackgroundColor,
+      this.todayPressedBackgroundColor,
       this.datePressedBackgroundColor,
       this.datePressedStyle,
       this.dateBackgroundColor,
@@ -222,6 +226,7 @@ class CalendarWeek extends StatefulWidget {
           TextStyle dateStyle = const TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
           TextStyle todayDateStyle = const TextStyle(color: Colors.orange, fontWeight: FontWeight.w400),
           Color todayBackgroundColor = Colors.black12,
+          Color todayPressedBackgroundColor = Colors.red,
           Color pressedDateBackgroundColor = Colors.blue,
           TextStyle pressedDateStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
           Color dateBackgroundColor = Colors.transparent,
@@ -250,6 +255,7 @@ class CalendarWeek extends StatefulWidget {
           dateStyle,
           todayDateStyle,
           todayBackgroundColor,
+          todayPressedBackgroundColor,
           pressedDateBackgroundColor,
           pressedDateStyle,
           dateBackgroundColor,
@@ -405,6 +411,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
       backgroundColor: widget.dateBackgroundColor,
       todayBackgroundColor: widget.todayBackgroundColor,
       pressedBackgroundColor: widget.datePressedBackgroundColor,
+      pressedTodayBackgroundColor: widget.todayPressedBackgroundColor,
       decorationAlignment: () {
         /// If date is contain in decorations list, use decorations Alignment
         if (widget.decorations.isNotEmpty) {
