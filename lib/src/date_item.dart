@@ -81,18 +81,19 @@ class __DateItemState extends State<DateItem> {
             /// Set default style each [builder] is called
             _defaultTextStyle = widget.dateStyle;
 
-
             /// Check and set [Background] of selected
             if (!data.hasError && data.hasData) {
               final DateTime? dateSelected = data.data;
+
               ///Check and set [Background] of today if it is also selected
-              if(compareDate(dateSelected, widget.today)) {
-                _defaultBackgroundColor = Colors.red;
-                _defaultTextStyle = widget.pressedDateStyle;
-              } else {
-                _defaultBackgroundColor = widget.todayBackgroundColor;
-              }
-              if (compareDate(widget.date, dateSelected)) {
+              if (compareDate(widget.date, widget.today)) {
+                if (compareDate(widget.date, dateSelected)) {
+                  _defaultBackgroundColor = Colors.red;
+                  _defaultTextStyle = widget.pressedDateStyle;
+                } else {
+                  _defaultBackgroundColor = widget.todayBackgroundColor;
+                }
+              } else if (compareDate(widget.date, dateSelected)) {
                 _defaultBackgroundColor = widget.pressedBackgroundColor;
                 _defaultTextStyle = widget.pressedDateStyle;
               }
@@ -100,10 +101,7 @@ class __DateItemState extends State<DateItem> {
             return _body();
           },
         )
-      : Container(
-          width: 50,
-          height: 50,
-        );
+      : Container(width: 50, height: 50);
 
   /// Body layout
   Widget _body() => Container(
